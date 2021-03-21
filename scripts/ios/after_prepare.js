@@ -74,7 +74,8 @@ module.exports = function (context) {
   var updatePlistContent = function () {
     fs.stat(plistPath, function (error, stat) {
       if(error) {
-        return
+		  console.log(error);
+        return;
       }
 
       var plistContent = fs.readFileSync(plistPath, 'utf8')
@@ -93,6 +94,7 @@ module.exports = function (context) {
         plistContent = plistContent.replace('<key>FacebookAdvertiserIDCollectionEnabled_PLACEHOLDER</key>', '').replace('<string>FACEBOOK_ADVERTISER_ID_COLLECTION_PLACEHOLDER</string>', '')
       }
 
+	  console.log('writing plist w/ facebook values.');
       fs.writeFileSync(plistPath, plistContent, 'utf8')
     })
   }
