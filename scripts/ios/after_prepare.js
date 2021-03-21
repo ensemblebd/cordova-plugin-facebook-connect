@@ -16,12 +16,6 @@ module.exports = function (context) {
   var platformRoot = path.join(projectRoot, 'platforms/ios');
   var pluginId = context.opts.plugin.id;
   
-  var plistPath = getPlistPath();
-  var configPath = getConfigPath();
-  
-  console.log('PLIST PATH: '+ plistPath);
-  console.log('CONFIG PATH: '+ configPath);
-  
   var defaults = {
     FACEBOOK_URL_SCHEME_SUFFIX: '',
     FACEBOOK_AUTO_LOG_APP_EVENTS: 'true',
@@ -102,6 +96,12 @@ module.exports = function (context) {
       fs.writeFileSync(plistPath, plistContent, 'utf8')
     })
   }
+  
+  var plistPath = getPlistPath();
+  var configPath = getConfigPath();
+  
+  console.log('PLIST PATH: '+ plistPath);
+  console.log('CONFIG PATH: '+ configPath);
   
   
   var FACEBOOK_URL_SCHEME_SUFFIX = ' '
