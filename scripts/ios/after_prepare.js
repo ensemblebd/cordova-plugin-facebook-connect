@@ -21,12 +21,22 @@ module.exports = function (context) {
       }
   }
   
+  var defaults = {
+    FACEBOOK_URL_SCHEME_SUFFIX: '',
+    FACEBOOK_AUTO_LOG_APP_EVENTS: true,
+    FACEBOOK_ADVERTISER_ID_COLLECTION: true
+  };
   var getPreferenceValue = function (name) {
       var config = fs.readFileSync("config.xml").toString()
       var preferenceValue = getPreferenceValueFromConfig(config, name)
       if(!preferenceValue) {
-        var packageJson = fs.readFileSync("package.json").toString()
-        preferenceValue = getPreferenceValueFromPackageJson(packageJson, name)
+        if (fs.existsSync("package.json")) {
+          var packageJson = fs.readFileSync("package.json").toString()
+          preferenceValue = getPreferenceValueFromPackageJson(packageJson, name)
+        }
+        else {
+          preferenceValue=defaults[name];
+        }
       }
       return preferenceValue
   }
