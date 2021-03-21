@@ -5,7 +5,7 @@ var path = require('path');
 
 module.exports = function (context) {
   var cordova_util = context.requireCordovaModule('cordova-lib/src/cordova/util.js');
-  var common = context.requireCordovaModule('cordova-common'), 
+  var common = context.requireCordovaModule('cordova-common');
   var ConfigParser = common.ConfigParser;
   var projectRoot = context.opts.projectRoot;
   
