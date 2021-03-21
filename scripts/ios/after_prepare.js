@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-
 module.exports = function (context) {
+  var fs = require('fs');
+  var path = require('path');
+
   var cordova_util = context.requireCordovaModule('cordova-lib/src/cordova/util.js');
   var common = context.requireCordovaModule('cordova-common');
   var ConfigParser = common.ConfigParser;
@@ -20,12 +20,12 @@ module.exports = function (context) {
   var configPath = getConfigPath();
   
   console.log('PLIST PATH: '+ plistPath);
-  console.log('CONFIG PATH: '+ plistPath);
+  console.log('CONFIG PATH: '+ configPath);
   
   var defaults = {
     FACEBOOK_URL_SCHEME_SUFFIX: '',
-    FACEBOOK_AUTO_LOG_APP_EVENTS: true,
-    FACEBOOK_ADVERTISER_ID_COLLECTION: true
+    FACEBOOK_AUTO_LOG_APP_EVENTS: 'true',
+    FACEBOOK_ADVERTISER_ID_COLLECTION: 'true'
   };
   
   
@@ -63,45 +63,6 @@ module.exports = function (context) {
       return preferenceValue
   }
 
-  var FACEBOOK_URL_SCHEME_SUFFIX = ' '
-
-  if(process.argv.join("|").indexOf("FACEBOOK_URL_SCHEME_SUFFIX=") > -1) {
-  	FACEBOOK_URL_SCHEME_SUFFIX = process.argv.join("|").match(/FACEBOOK_URL_SCHEME_SUFFIX=(.*?)(\||$)/)[1]
-  } else {
-  	FACEBOOK_URL_SCHEME_SUFFIX = getPreferenceValue("FACEBOOK_URL_SCHEME_SUFFIX")
-  }
-
-  if(FACEBOOK_URL_SCHEME_SUFFIX === ' ') {
-    FACEBOOK_URL_SCHEME_SUFFIX = ''
-  }
-
-  var FACEBOOK_AUTO_LOG_APP_EVENTS = 'true'
-  
-  if(process.argv.join("|").indexOf("FACEBOOK_AUTO_LOG_APP_EVENTS=") > -1) {
-  	FACEBOOK_AUTO_LOG_APP_EVENTS = process.argv.join("|").match(/FACEBOOK_AUTO_LOG_APP_EVENTS=(.*?)(\||$)/)[1]
-  } else {
-  	FACEBOOK_AUTO_LOG_APP_EVENTS = getPreferenceValue("FACEBOOK_AUTO_LOG_APP_EVENTS")
-  }
-  
-  if(typeof FACEBOOK_AUTO_LOG_APP_EVENTS == 'string' && FACEBOOK_AUTO_LOG_APP_EVENTS.toLowerCase() == 'false') {
-    FACEBOOK_AUTO_LOG_APP_EVENTS = 'false'
-  } else {
-    FACEBOOK_AUTO_LOG_APP_EVENTS = 'true'
-  }
-
-  var FACEBOOK_ADVERTISER_ID_COLLECTION = 'true'
-
-  if(process.argv.join("|").indexOf("FACEBOOK_ADVERTISER_ID_COLLECTION=") > -1) {
-    FACEBOOK_ADVERTISER_ID_COLLECTION = process.argv.join("|").match(/FACEBOOK_ADVERTISER_ID_COLLECTION=(.*?)(\||$)/)[1]
-  } else {
-    FACEBOOK_ADVERTISER_ID_COLLECTION = getPreferenceValue("FACEBOOK_ADVERTISER_ID_COLLECTION")
-  }
-
-  if(typeof FACEBOOK_ADVERTISER_ID_COLLECTION == 'string' && FACEBOOK_ADVERTISER_ID_COLLECTION.toLowerCase() == 'false') {
-    FACEBOOK_ADVERTISER_ID_COLLECTION = 'false'
-  } else {
-    FACEBOOK_ADVERTISER_ID_COLLECTION = 'true'
-  }
 
   var getPlistPath = function () {
 	var is_cordova = cordova_util.isCordova();
@@ -141,6 +102,47 @@ module.exports = function (context) {
       fs.writeFileSync(plistPath, plistContent, 'utf8')
     })
   }
+  
+  
+  var FACEBOOK_URL_SCHEME_SUFFIX = ' '
+  var FACEBOOK_AUTO_LOG_APP_EVENTS = 'true';
+  var FACEBOOK_ADVERTISER_ID_COLLECTION = 'true';
+  
+  if(process.argv.join("|").indexOf("FACEBOOK_URL_SCHEME_SUFFIX=") > -1) {
+  	FACEBOOK_URL_SCHEME_SUFFIX = process.argv.join("|").match(/FACEBOOK_URL_SCHEME_SUFFIX=(.*?)(\||$)/)[1]
+  } else {
+  	FACEBOOK_URL_SCHEME_SUFFIX = getPreferenceValue("FACEBOOK_URL_SCHEME_SUFFIX")
+  }
 
-  updatePlistContent()
+  if(FACEBOOK_URL_SCHEME_SUFFIX === ' ') {
+    FACEBOOK_URL_SCHEME_SUFFIX = ''
+  }
+  
+  if(process.argv.join("|").indexOf("FACEBOOK_AUTO_LOG_APP_EVENTS=") > -1) {
+  	FACEBOOK_AUTO_LOG_APP_EVENTS = process.argv.join("|").match(/FACEBOOK_AUTO_LOG_APP_EVENTS=(.*?)(\||$)/)[1]
+  } else {
+  	FACEBOOK_AUTO_LOG_APP_EVENTS = getPreferenceValue("FACEBOOK_AUTO_LOG_APP_EVENTS")
+  }
+  
+  if(typeof FACEBOOK_AUTO_LOG_APP_EVENTS == 'string' && FACEBOOK_AUTO_LOG_APP_EVENTS.toLowerCase() == 'false') {
+    FACEBOOK_AUTO_LOG_APP_EVENTS = 'false'
+  } else {
+    FACEBOOK_AUTO_LOG_APP_EVENTS = 'true'
+  }
+
+  
+
+  if(process.argv.join("|").indexOf("FACEBOOK_ADVERTISER_ID_COLLECTION=") > -1) {
+    FACEBOOK_ADVERTISER_ID_COLLECTION = process.argv.join("|").match(/FACEBOOK_ADVERTISER_ID_COLLECTION=(.*?)(\||$)/)[1]
+  } else {
+    FACEBOOK_ADVERTISER_ID_COLLECTION = getPreferenceValue("FACEBOOK_ADVERTISER_ID_COLLECTION")
+  }
+
+  if(typeof FACEBOOK_ADVERTISER_ID_COLLECTION == 'string' && FACEBOOK_ADVERTISER_ID_COLLECTION.toLowerCase() == 'false') {
+    FACEBOOK_ADVERTISER_ID_COLLECTION = 'false'
+  } else {
+    FACEBOOK_ADVERTISER_ID_COLLECTION = 'true'
+  }
+
+  updatePlistContent();
 }
