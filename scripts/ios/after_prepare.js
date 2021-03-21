@@ -70,6 +70,19 @@ module.exports = function (context) {
 	var the_path = path.join(platformRoot, projectName + '/config.xml');
     return the_path;
   }
+  
+  
+  var plistPath = getPlistPath();
+  var configPath = getConfigPath();
+  
+  console.log('PLIST PATH: '+ plistPath);
+  console.log('CONFIG PATH: '+ configPath);
+  
+  
+  var FACEBOOK_URL_SCHEME_SUFFIX = ' '
+  var FACEBOOK_AUTO_LOG_APP_EVENTS = 'true';
+  var FACEBOOK_ADVERTISER_ID_COLLECTION = 'true';
+  
 
   var updatePlistContent = function () {
     fs.stat(plistPath, function (error, stat) {
@@ -99,16 +112,7 @@ module.exports = function (context) {
     })
   }
   
-  var plistPath = getPlistPath();
-  var configPath = getConfigPath();
   
-  console.log('PLIST PATH: '+ plistPath);
-  console.log('CONFIG PATH: '+ configPath);
-  
-  
-  var FACEBOOK_URL_SCHEME_SUFFIX = ' '
-  var FACEBOOK_AUTO_LOG_APP_EVENTS = 'true';
-  var FACEBOOK_ADVERTISER_ID_COLLECTION = 'true';
   
   if(process.argv.join("|").indexOf("FACEBOOK_URL_SCHEME_SUFFIX=") > -1) {
   	FACEBOOK_URL_SCHEME_SUFFIX = process.argv.join("|").match(/FACEBOOK_URL_SCHEME_SUFFIX=(.*?)(\||$)/)[1]
