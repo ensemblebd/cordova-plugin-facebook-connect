@@ -1,8 +1,34 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
 
 module.exports = function (context) {
+  var cordova_util = context.requireCordovaModule('cordova-lib/src/cordova/util.js');
+  var common = context.requireCordovaModule('cordova-common'), 
+  var ConfigParser = common.ConfigParser;
+  var projectRoot = context.opts.projectRoot;
+  
+  var configXml = cordova_util.projectConfig(projectRoot);
+  var config = new ConfigParser(configXml);
+  var projectName = config.name();
+  
+  var platformRoot = path.join(projectRoot, 'platforms/ios');
+  var pluginId = context.opts.plugin.id;
+  
+  var plistPath = getPlistPath();
+  var configPath = getConfigPath();
+  
+  console.log('PLIST PATH: '+ plistPath);
+  console.log('CONFIG PATH: '+ plistPath);
+  
+  var defaults = {
+    FACEBOOK_URL_SCHEME_SUFFIX: '',
+    FACEBOOK_AUTO_LOG_APP_EVENTS: true,
+    FACEBOOK_ADVERTISER_ID_COLLECTION: true
+  };
+  
+  
   var getPreferenceValueFromConfig = function (config, name) {
       var value = config.match(new RegExp('name="' + name + '" value="(.*?)"', "i"))
       if(value && value[1]) {
@@ -21,13 +47,9 @@ module.exports = function (context) {
       }
   }
   
-  var defaults = {
-    FACEBOOK_URL_SCHEME_SUFFIX: '',
-    FACEBOOK_AUTO_LOG_APP_EVENTS: true,
-    FACEBOOK_ADVERTISER_ID_COLLECTION: true
-  };
+  
   var getPreferenceValue = function (name) {
-      var config = fs.readFileSync("config.xml").toString()
+      var config = fs.readFileSync(configPath).toString()
       var preferenceValue = getPreferenceValueFromConfig(config, name)
       if(!preferenceValue) {
         if (fs.existsSync("package.json")) {
@@ -82,14 +104,17 @@ module.exports = function (context) {
   }
 
   var getPlistPath = function () {
-    var common = context.requireCordovaModule('cordova-common'), 
-    util = context.requireCordovaModule('cordova-lib/src/cordova/util'), 
-    projectName = new common.ConfigParser(util.projectConfig(util.isCordova())).name(), 
-    plistPath = './platforms/ios/' + projectName + '/' + projectName + '-Info.plist'
+	var is_cordova = cordova_util.isCordova();
+	//cordova_util.projectConfig(is_cordova);
+    //projectName = new common.ConfigParser(projectConfig).name(), 
+    //plistPath = './platforms/ios/' + projectName + '/' + projectName + '-Info.plist'
+	var plistPath = path.join(platformRoot, projectName + '/' + projectName + '-Info.plist');
     return plistPath
   }
-
-  var plistPath = getPlistPath()
+  var getConfigPath = function () {
+	var the_path = path.join(platformRoot, projectName + '/config.xml');
+    return the_path;
+  }
 
   var updatePlistContent = function () {
     fs.stat(plistPath, function (error, stat) {
