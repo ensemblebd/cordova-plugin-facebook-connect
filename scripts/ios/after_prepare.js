@@ -85,31 +85,29 @@ module.exports = function (context) {
   
 
   var updatePlistContent = function () {
-    fs.stat(plistPath, function (error, stat) {
-      if(error) {
-		  console.log(error);
-        return;
-      }
+	console.log('processing plist alterations..');
+	if (fs.existsSync(plistPath)) {
+	  var plistContent = fs.readFileSync(plistPath, 'utf8');
+	  
+	  console.log('plist len: '+plistContent.length);
 
-      var plistContent = fs.readFileSync(plistPath, 'utf8')
+	  plistContent = plistContent.replace(/FACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER/g, FACEBOOK_URL_SCHEME_SUFFIX);
 
-      plistContent = plistContent.replace(/FACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER/g, FACEBOOK_URL_SCHEME_SUFFIX)
+	  if(plistContent.indexOf('<key>FacebookAutoLogAppEventsEnabled</key>') == -1) {
+		plistContent = plistContent.replace('<key>FacebookAutoLogAppEventsEnabled_PLACEHOLDER</key>', '<key>FacebookAutoLogAppEventsEnabled</key>').replace('<string>FACEBOOK_AUTO_LOG_APP_EVENTS_PLACEHOLDER</string>', '<' + FACEBOOK_AUTO_LOG_APP_EVENTS + ' />');
+	  } else {
+		plistContent = plistContent.replace('<key>FacebookAutoLogAppEventsEnabled_PLACEHOLDER</key>', '').replace('<string>FACEBOOK_AUTO_LOG_APP_EVENTS_PLACEHOLDER</string>', '');
+	  }
 
-      if(plistContent.indexOf('<key>FacebookAutoLogAppEventsEnabled</key>') == -1) {
-        plistContent = plistContent.replace('<key>FacebookAutoLogAppEventsEnabled_PLACEHOLDER</key>', '<key>FacebookAutoLogAppEventsEnabled</key>').replace('<string>FACEBOOK_AUTO_LOG_APP_EVENTS_PLACEHOLDER</string>', '<' + FACEBOOK_AUTO_LOG_APP_EVENTS + ' />')
-      } else {
-        plistContent = plistContent.replace('<key>FacebookAutoLogAppEventsEnabled_PLACEHOLDER</key>', '').replace('<string>FACEBOOK_AUTO_LOG_APP_EVENTS_PLACEHOLDER</string>', '')
-      }
+	  if(plistContent.indexOf('<key>FacebookAdvertiserIDCollectionEnabled</key>') == -1) {
+		plistContent = plistContent.replace('<key>FacebookAdvertiserIDCollectionEnabled_PLACEHOLDER</key>', '<key>FacebookAdvertiserIDCollectionEnabled</key>').replace('<string>FACEBOOK_ADVERTISER_ID_COLLECTION_PLACEHOLDER</string>', '<' + FACEBOOK_ADVERTISER_ID_COLLECTION + ' />');
+	  } else {
+		plistContent = plistContent.replace('<key>FacebookAdvertiserIDCollectionEnabled_PLACEHOLDER</key>', '').replace('<string>FACEBOOK_ADVERTISER_ID_COLLECTION_PLACEHOLDER</string>', '');
+	  }
 
-      if(plistContent.indexOf('<key>FacebookAdvertiserIDCollectionEnabled</key>') == -1) {
-        plistContent = plistContent.replace('<key>FacebookAdvertiserIDCollectionEnabled_PLACEHOLDER</key>', '<key>FacebookAdvertiserIDCollectionEnabled</key>').replace('<string>FACEBOOK_ADVERTISER_ID_COLLECTION_PLACEHOLDER</string>', '<' + FACEBOOK_ADVERTISER_ID_COLLECTION + ' />')
-      } else {
-        plistContent = plistContent.replace('<key>FacebookAdvertiserIDCollectionEnabled_PLACEHOLDER</key>', '').replace('<string>FACEBOOK_ADVERTISER_ID_COLLECTION_PLACEHOLDER</string>', '')
-      }
-
-	  console.log('writing plist w/ facebook values.');
-      fs.writeFileSync(plistPath, plistContent, 'utf8')
-    })
+	  console.log('writing plist w/ facebook values, new len: '+plistContent.length);
+	  fs.writeFileSync(plistPath, plistContent, 'utf8');
+	}
   }
   
   
