@@ -1,5 +1,5 @@
 {
-  "name": "@ensemblebd/cordova-plugin-facebook-connect-eg",
+  "name": "cordova-plugin-facebook-connect-eg",
   "version": "2.1.0",
   "description": "Cordova Facebook SDK Plugin",
   "cordova": {
