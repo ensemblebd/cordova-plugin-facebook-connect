@@ -1,5 +1,5 @@
 {
-  "name": "cordova-plugin-facebook-connect-eg",
+  "name": "@ensemblebd/cordova-plugin-facebook-connect-eg",
   "version": "2.1.0",
   "description": "Cordova Facebook SDK Plugin",
   "cordova": {
@@ -13,6 +13,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ensemblebd/cordova-plugin-facebook-connect-eg"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "cordova",
